@@ -28,6 +28,11 @@ const router = createRouter({
           path: '/classification',
           name: '分类查询',
           component: () => import('/@/view/classification/classification.vue')
+        },
+        {
+          path: '/statistical',
+          name: '统计分析',
+          component: () => import('/@/view/statistical/statistical.vue')
         }
       ]
     }

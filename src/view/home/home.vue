@@ -27,7 +27,7 @@ export default defineComponent({
       menu: [
         { name: '首页', path: '/homePage' },
         { name: '分类查询', path: '/classification' },
-        { name: '统计分析', path: '' },
+        { name: '统计分析', path: '/statistical' },
         { name: '报警管理', path: '' },
         { name: '视频管理', path: '' },
         { name: '状态监测', path: '' },
@@ -109,6 +109,67 @@ export default defineComponent({
     margin-top: 0.2rem;
     background: url('/src/assets/login/u2.png') no-repeat center center;
     background-size: 100% 100%;
+    padding: 0.2rem;
+    box-sizing: border-box;
+    .classification,
+    .statistical {
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      .title {
+        width: 1rem;
+        color: #fff;
+        font-size: 0.2rem;
+        font-weight: bold;
+        border-bottom: 1px solid #797979;
+        text-align: center;
+        padding-bottom: 0.1rem;
+        box-sizing: border-box;
+        margin-bottom: 0.2rem;
+      }
+      .el-overlay {
+        .el-dialog {
+          background-color: #072e37;
+          border: 1px solid #797979;
+          border-radius: 0.1rem;
+          .el-dialog__header {
+            .el-dialog__title {
+              width: 100%;
+              color: #fff;
+              border-bottom: 1px solid #194f5d;
+              display: block;
+              padding-bottom: 0.1rem;
+              box-sizing: border-box;
+            }
+          }
+          .el-dialog__body {
+            padding-bottom: 0;
+            p {
+              color: #fff;
+              text-align: center;
+              padding-bottom: 0.3rem;
+            }
+            .el-form {
+              .el-form-item {
+                width: 60%;
+                margin: 0 auto 0.2rem;
+              }
+            }
+          }
+          .el-dialog__footer {
+            .dialog-footer {
+              .el-button {
+                width: 1rem;
+                background-color: #053c43;
+                span {
+                  color: #00f3ff;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }
 </style>
