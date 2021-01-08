@@ -39,11 +39,20 @@
           format="YYYY/MM/DD"
         >
         </el-date-picker>
+        <el-input
+          v-if="item.type === 'textarea'"
+          type="textarea"
+          v-model="formDatas[item.value]"
+          :placeholder="item.placeholder"
+        ></el-input>
         <el-button v-if="item.type === 'search'" @click="search">{{ item.placeholder }}</el-button>
         <el-button v-if="item.type === 'add'" @click="add">{{ item.placeholder }}</el-button>
+        <el-button v-if="item.type === 'download'" @click="download">{{
+          item.placeholder
+        }}</el-button>
       </el-form-item>
     </el-form>
-    <div class="btns">
+    <div class="btns" v-if="searchBtn">
       <div class="btn" v-for="item in searchBtn" :key="item.name">
         <el-button v-if="item.type === 'search'" @click="search">{{ item.name }}</el-button>
         <el-button v-if="item.type === 'add'" @click="add">{{ item.name }}</el-button>
@@ -111,21 +120,27 @@ export default defineComponent({
           }
         }
         .el-select {
-          width: 100%;
+          width: 90%;
           .el-input {
             width: 100%;
             input {
-              background-color: rgb(2, 26, 63);
-              border: none;
+              background-color: #072e37;
+              color: #fff;
+              border-width: 2px;
+              border-style: inset;
+              border-color: -internal-light-dark(rgb(118, 118, 118), rgb(133, 133, 133));
+            }
+            input::placeholder {
+              color: #00f3ff;
             }
           }
         }
         .el-date-editor {
           width: 100%;
-          background-color: rgb(2, 26, 63);
+          background-color: #072e37;
           border: none;
           input {
-            background-color: rgb(2, 26, 63);
+            background-color: #072e37;
             border: none;
             color: #fff;
           }
@@ -134,6 +149,15 @@ export default defineComponent({
           }
           span {
             color: #fff;
+          }
+        }
+        .el-textarea {
+          .el-textarea__inner {
+            background-color: #062830;
+            color: #00f3ff;
+          }
+          .el-textarea__inner::placeholder {
+            color: #00f3ff;
           }
         }
         .el-cascader {

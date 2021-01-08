@@ -33,6 +33,16 @@ const router = createRouter({
           path: '/statistical',
           name: '统计分析',
           component: () => import('/@/view/statistical/statistical.vue')
+        },
+        {
+          path: '/alarm',
+          name: '报警管理',
+          component: () => import('/@/view/alarm/alarm.vue')
+        },
+        {
+          path: '/video',
+          name: '视频图像管理',
+          component: () => import('/@/view/video/video.vue')
         }
       ]
     }

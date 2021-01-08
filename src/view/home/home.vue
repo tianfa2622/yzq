@@ -28,8 +28,8 @@ export default defineComponent({
         { name: '首页', path: '/homePage' },
         { name: '分类查询', path: '/classification' },
         { name: '统计分析', path: '/statistical' },
-        { name: '报警管理', path: '' },
-        { name: '视频管理', path: '' },
+        { name: '报警处理', path: '/alarm' },
+        { name: '视频管理', path: '/video' },
         { name: '状态监测', path: '' },
         { name: '图像识别', path: '' },
         { name: '样本管理', path: '' },
@@ -112,7 +112,9 @@ export default defineComponent({
     padding: 0.2rem;
     box-sizing: border-box;
     .classification,
-    .statistical {
+    .statistical,
+    .alarm,
+    .video {
       width: 100%;
       height: 100%;
       overflow: auto;
