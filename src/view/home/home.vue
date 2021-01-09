@@ -30,10 +30,10 @@ export default defineComponent({
         { name: '统计分析', path: '/statistical' },
         { name: '报警处理', path: '/alarm' },
         { name: '视频管理', path: '/video' },
-        { name: '状态监测', path: '' },
-        { name: '图像识别', path: '' },
-        { name: '样本管理', path: '' },
-        { name: '系统管理', path: '' }
+        { name: '状态监测', path: '/status' },
+        { name: '图像识别', path: '/photo' },
+        { name: '样本管理', path: '/sample' },
+        { name: '系统管理', path: '/system/user' }
       ],
       goRouter: (path: string) => {
         router.push(path)
@@ -114,7 +114,11 @@ export default defineComponent({
     .classification,
     .statistical,
     .alarm,
-    .video {
+    .video,
+    .status,
+    .photo,
+    .sample,
+    .system {
       width: 100%;
       height: 100%;
       overflow: auto;

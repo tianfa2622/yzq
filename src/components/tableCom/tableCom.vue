@@ -14,7 +14,7 @@
         background: '#081D27',
       }"
     >
-      <el-table-column label="序号" width="200">
+      <el-table-column label="序号" width="auto">
         <template #default="scope">
           {{ scope.$index + 1 }}
         </template>
@@ -26,7 +26,7 @@
         :key="index"
       >
       </el-table-column>
-      <el-table-column label="操作" width="200" v-if="!operateShow">
+      <el-table-column label="操作" width="auto" v-if="!operateShow">
         <template #default="scope">
           <div v-for="(item, index) in tableSettings" :key="index">
             <el-button
