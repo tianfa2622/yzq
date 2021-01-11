@@ -45,6 +45,11 @@
           v-model="formDatas[item.value]"
           :placeholder="item.placeholder"
         ></el-input>
+        <el-radio-group v-if="item.type === 'radio'" v-model="formDatas[item.value]">
+          <el-radio :label="op.value" v-for="op in item.options" :key="op.value">{{
+            op.label
+          }}</el-radio>
+        </el-radio-group>
         <el-button v-if="item.type === 'search'" @click="search">{{ item.placeholder }}</el-button>
         <el-button v-if="item.type === 'add'" @click="add">{{ item.placeholder }}</el-button>
         <el-button v-if="item.type === 'download'" @click="download">{{
@@ -136,9 +141,11 @@ export default defineComponent({
           }
         }
         .el-date-editor {
-          width: 100%;
+          width: 90%;
           background-color: #072e37;
-          border: none;
+          border-width: 2px;
+          border-style: inset;
+          border-color: -internal-light-dark(rgb(118, 118, 118), rgb(133, 133, 133));
           input {
             background-color: #072e37;
             border: none;
@@ -152,6 +159,7 @@ export default defineComponent({
           }
         }
         .el-textarea {
+          width: 90%;
           .el-textarea__inner {
             background-color: #062830;
             color: #00f3ff;
@@ -162,6 +170,13 @@ export default defineComponent({
         }
         .el-cascader {
           width: 100%;
+        }
+        .el-radio-group {
+          .el-radio {
+            .el-radio__label {
+              color: #fff;
+            }
+          }
         }
       }
     }

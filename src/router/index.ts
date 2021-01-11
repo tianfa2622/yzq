@@ -88,6 +88,11 @@ const router = createRouter({
               path: '/system/dictionaries',
               name: '字典管理',
               component: () => import('/@/view/system/child/dictionaries.vue')
+            },
+            {
+              path: '/system/equipment',
+              name: '设备管理',
+              component: () => import('/@/view/system/child/equipment.vue')
             }
           ]
         }

@@ -3,15 +3,15 @@
     <h2 class="title">{{ $route.matched[1].name }}</h2>
     <main>
       <div class="l">
-        <h3>设备在线率统计</h3>
         <div class="bar">
+          <h3>设备在线率统计</h3>
           <div id="statusBar"></div>
         </div>
       </div>
       <img src="/src/assets/statistical/u196.png" alt="" />
       <div class="r">
-        <h3>设备总数量统计</h3>
         <div class="pie">
+          <h3>设备总数量统计</h3>
           <div id="statusPie"></div>
         </div>
       </div>
@@ -74,7 +74,7 @@ export default defineComponent({
             type: 'category',
             axisLine: {
               lineStyle: {
-                color: '#ccc'
+                color: '#000'
               }
             },
             data: [
@@ -93,7 +93,7 @@ export default defineComponent({
           },
           legend: {
             textStyle: {
-              color: '#ccc'
+              color: '#000'
             },
             top: '5%',
             data: ['在线', '离线']
@@ -118,7 +118,8 @@ export default defineComponent({
               stack: 'total',
               label: {
                 show: true,
-                formatter: '{c}%'
+                formatter: '{c}%',
+                color: '#fff'
               },
               emphasis: {
                 focus: 'series'
@@ -141,7 +142,7 @@ export default defineComponent({
           legend: {
             top: '5%',
             textStyle: {
-              color: '#ccc'
+              color: '#000'
             }
           },
           series: [
@@ -152,7 +153,7 @@ export default defineComponent({
               label: {
                 position: 'inside',
                 formatter: '{d}%',
-                color: '#ccc'
+                color: '#000'
               },
               data: [
                 { value: 1048, name: '在线' },
@@ -185,8 +186,7 @@ export default defineComponent({
         width: 1.2rem;
         height: 0.4rem;
         border-bottom: 1px solid #ccc;
-        margin: 0.1rem auto;
-        text-align: center;
+        margin-bottom: 0.1rem;
         color: #fff;
       }
     }
@@ -211,9 +211,10 @@ export default defineComponent({
         margin: 0.1rem 0;
       }
       .pie {
-        width: 100%;
+        width: 60%;
+        margin: 0.2rem auto 0;
         #statusPie {
-          width: 50%;
+          width: 100%;
           height: 4rem;
           background: #fff;
           border-radius: 0.2rem;

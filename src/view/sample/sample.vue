@@ -15,17 +15,6 @@
           @download="download"
           @uploading="uploading"
         />
-        <Eltable
-          :tableHead="tableHead"
-          :tableDatas="tableDatas"
-          :tableSettings="tableSettings"
-          :search="searchs"
-          @del="del"
-          @modify="modify"
-          @detailed="detailed"
-          @sizeChange="sizeChange"
-          @currentChange="currentChange"
-        />
       </div>
       <img src="/src/assets/statistical/u196.png" alt="" />
       <div class="r">
@@ -40,6 +29,19 @@
         <img src="/src/assets/statistical/u961.png" alt="" />
       </div>
     </main>
+    <footer>
+      <Eltable
+        :tableHead="tableHead"
+        :tableDatas="tableDatas"
+        :tableSettings="tableSettings"
+        :search="searchs"
+        @del="del"
+        @modify="modify"
+        @detailed="detailed"
+        @sizeChange="sizeChange"
+        @currentChange="currentChange"
+      />
+    </footer>
     <el-dialog :title="title" v-model="dialogShow" center width="30%">
       <ul>
         <template v-for="(item, index) in dialog" :key="index">
@@ -210,7 +212,6 @@ export default defineComponent({
 .sample {
   main {
     width: 100%;
-    height: calc(100% - 0.34rem);
     display: flex;
     .l {
       width: 70%;
@@ -246,6 +247,8 @@ export default defineComponent({
     }
     .r {
       width: calc(100% - 70%);
+      padding-top: 2rem;
+      box-sizing: border-box;
       .rTitle {
         width: 60%;
         height: 1rem;

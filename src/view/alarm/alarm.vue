@@ -3,15 +3,15 @@
     <h2 class="title">{{ $route.matched[1].name }}</h2>
     <main>
       <div class="l">
-        <h3>报警数量统计</h3>
         <div class="bar">
+          <h3>报警数量统计</h3>
           <div id="alarmBar"></div>
         </div>
       </div>
       <img src="/src/assets/statistical/u196.png" alt="" />
       <div class="r">
-        <h3>报警地点统计</h3>
         <div class="pie">
+          <h3>报警地点统计</h3>
           <div id="alarmPie"></div>
         </div>
       </div>
@@ -370,7 +370,7 @@ export default defineComponent({
         width: 1.2rem;
         height: 0.4rem;
         border-bottom: 1px solid #ccc;
-        margin: 0.1rem auto;
+        margin-bottom: 0.1rem;
       }
       p {
         span {
@@ -380,9 +380,10 @@ export default defineComponent({
     }
     .l {
       .bar {
-        width: 100%;
+        width: 50%;
+        margin: 0 auto;
         #alarmBar {
-          width: 50%;
+          width: 100%;
           height: 4rem;
           float: right;
         }
@@ -399,9 +400,10 @@ export default defineComponent({
         margin: 0.1rem 0;
       }
       .pie {
-        width: 100%;
+        width: 50%;
+        margin: 0 auto;
         #alarmPie {
-          width: 50%;
+          width: 100%;
           height: 4rem;
         }
       }

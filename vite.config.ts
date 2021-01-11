@@ -18,6 +18,6 @@ export default defineConfig({
   },
   plugins: [vue()],
   optimizeDeps: {
-    include: ['echarts', 'axios']
+    include: ['echarts', 'axios', 'BMap']
   }
 })

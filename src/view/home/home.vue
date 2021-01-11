@@ -118,10 +118,13 @@ export default defineComponent({
     .status,
     .photo,
     .sample,
-    .system {
+    .system,
+    .homePage {
       width: 100%;
       height: 100%;
       overflow: auto;
+      padding-right: 0.2rem;
+      box-sizing: border-box;
       .title {
         width: 1rem;
         color: #fff;

@@ -4,22 +4,22 @@
     <main>
       <div class="l">
         <Elsearch :searchSettings="searchSettings" @search="search" />
-        <h3>每日过检包裹统计</h3>
         <div class="line">
+          <h3>每日过检包裹统计</h3>
           <div id="statisticalLine"></div>
+          <p>包裹总数：<span>884件</span></p>
         </div>
-        <p>包裹总数：<span>884件</span></p>
       </div>
       <img src="/src/assets/statistical/u196.png" alt="" />
       <div class="r">
         <div style="width: 100%; height: 0.41rem">
           <el-button @click="detailed">导出</el-button>
         </div>
-        <h3>报警类型统计</h3>
         <div class="bar">
+          <h3>报警类型统计</h3>
           <div id="statisticalBar"></div>
+          <p>报警总数：<span>88</span></p>
         </div>
-        <p>报警总数：<span>88</span></p>
       </div>
     </main>
     <el-dialog :title="title" v-model="dialogShow" center width="60%">
@@ -192,14 +192,13 @@ export default defineComponent({
       h3,
       p {
         width: 100%;
-        text-align: center;
         color: #fff;
       }
       h3 {
         width: 1.2rem;
         height: 0.4rem;
         border-bottom: 1px solid #ccc;
-        margin: 0.1rem auto;
+        margin-bottom: 0.1rem;
       }
       p {
         span {
@@ -219,15 +218,15 @@ export default defineComponent({
         }
       }
       .line {
-        width: 100%;
-        margin: 0.1rem 0;
+        width: 50%;
+        margin: 0.1rem auto;
         #statisticalLine {
-          width: 50%;
+          width: 100%;
           height: 4rem;
           float: right;
           background: #fff;
           border-radius: 0.2rem;
-          margin-right: 0.4rem;
+          margin-bottom: 0.1rem;
         }
       }
     }
@@ -251,10 +250,10 @@ export default defineComponent({
         margin: 0.1rem 0;
       }
       .bar {
-        width: 100%;
-        margin: 0.1rem 0;
+        width: 50%;
+        margin: 0.1rem auto;
         #statisticalBar {
-          width: 50%;
+          width: 100%;
           height: 4rem;
         }
       }

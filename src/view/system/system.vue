@@ -23,7 +23,7 @@ export default defineComponent({
       menu: [
         { name: '系统管理', path: '/system/user' },
         { name: '角色管理', path: '/system/role' },
-        { name: '设备管理', path: '' },
+        { name: '设备管理', path: '/system/equipment' },
         { name: '字典管理', path: '/system/dictionaries' },
         { name: '组织机构', path: '/system/organization' },
         { name: '系统日志', path: '/system/log' }
@@ -49,7 +49,8 @@ export default defineComponent({
     .role,
     .log,
     .organization,
-    .dictionaries {
+    .dictionaries,
+    .equipment {
       width: 100%;
       height: 100%;
       .searchCom {
