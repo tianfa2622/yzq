@@ -7,12 +7,13 @@
     "strict": true,
     "jsx": "preserve",
     "sourceMap": true,
+    "allowSyntheticDefaultImports": true,
     "lib": ["esnext", "dom"],
-    "types": ["vite/client"],
+    "types": ["vite/client", "node"],
     "plugins": [{ "name": "@vuedx/typescript-plugin-vue" }],
     "baseUrl": ".",
     "paths": {
-      "/@/*": ["./*"]
+      "/@/*": ["./src/*"]
     },
     "removeComments": true,
     "outDir": "./dist"

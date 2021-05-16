@@ -12,7 +12,6 @@
           :searchBtn="searchBtn"
           @add="add"
           @search="search"
-          @download="download"
           @uploading="uploading"
         />
       </div>
@@ -23,7 +22,7 @@
           <img src="/src/assets/statistical/u34.png" alt="" />
           <h3>
             <p>总样本数</p>
-            <p><span>200</span> 个</p>
+            <p><span>{{ybtotal}}</span> 个</p>
           </h3>
         </div>
         <img src="/src/assets/statistical/u961.png" alt="" />
@@ -59,14 +58,20 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, reactive, onMounted } from 'vue'
+import { defineComponent, reactive, onMounted ,ref, toRefs} from 'vue'
 import * as echarts from 'echarts'
 import Elsearch from '/@/components/searchCom/searchCom.vue'
 import Eltable from '/@/components/tableCom/tableCom.vue'
+import { searchAll,searchOne,searchTp,searchYbstj,searchYbzs,update,uploadTp,del,insert} from '/@/api/sample/index'
+import { ElMessage } from 'element-plus';
+import { Rows } from '../../types/sample';
 export default defineComponent({
   setup() {
+    const tableDatas = ref<Rows>([])
+    const ybstj = ref<{lrdw?:any,ybths?:any}>({})
     const state = reactive({
       title: '',
+      ybtotal: 0,
       dialogShow: false,
       searchs: {
         searchCurrent: 1,
@@ -74,17 +79,21 @@ export default defineComponent({
         searchTotal: 999
       },
       searchSettings: [
-        { placeholder: '请输入枪支名称', type: 'input', value: 'yhmc' },
-        { placeholder: '请输入枪支类型', type: 'input', value: 'yhmc' },
-        { placeholder: '请输入录入人员', type: 'input', value: 'yhmc' },
-        { placeholder: '请输入录入单位', type: 'input', value: 'yhmc' },
-        { placeholder: '请输入录入时间 ', type: 'input', value: 'yhmc' },
-        { placeholder: '搜索', type: 'add' }
+        { placeholder: '请输入枪支名称', type: 'input', value: 'qzmc' },
+        { placeholder: '请输入枪支类型', type: 'input', value: 'qzlx' },
+        { placeholder: '请输入录入人员', type: 'input', value: 'lrly' },
+        { placeholder: '请输入录入单位', type: 'input', value: 'lrdw' },
+        { placeholder: '请输入录入时间 ', type: 'input', value: 'lrsj' },
+        { placeholder: '搜索', type: 'search' }
       ],
       searchBtn: [
         {
           name: '添加',
-          type: 'download'
+          type: 'add'
+        },
+        {
+          name: '重置',
+          type: 'reset'
         },
         {
           name: '导入',
@@ -92,15 +101,13 @@ export default defineComponent({
         }
       ],
       tableHead: [
-        { label: '枪支名称', prop: 'input' },
-        { label: '枪支类型', prop: 'input' },
-        { label: '录入人员', prop: 'input' },
-        { label: '录入单位', prop: 'input' },
-        { label: '录入时间', prop: 'input' }
+        { label: '枪支名称', prop: 'qzmc' },
+        { label: '枪支类型', prop: 'qzlx' },
+        { label: '录入人员', prop: 'lrly' },
+        { label: '录入单位', prop: 'lrdw' },
+        { label: '录入时间', prop: 'lrsj' }
       ],
-      tableDatas: Array(5).fill({
-        input: '123'
-      }),
+      tableDatas: [],
       tableSettings: [
         { name: '详情', type: 'detailed' },
         { name: '修改', type: 'modify' },
@@ -131,8 +138,53 @@ export default defineComponent({
       add: (val: object) => {
         console.log(val)
       },
-      search: (val: object) => {
-        console.log(val)
+      // 搜索按钮 这里要一个参数
+      search: async (val?: object) => {
+        let size = state.searchs.searchSize
+        let current = state.searchs.searchCurrent
+        try{
+          const  res  = await searchAll({ ...val, size: size, current: current })
+          if (res.code === 1) {
+            tableDatas.value = res.data.records
+            state.searchs.searchTotal = res.data.total
+            if (val) {
+              ElMessage.success({
+                message: '查询成功',
+                type: 'success'
+              })
+            }
+          }
+        } catch(err){
+          console.log(err)
+        }
+      },
+      // 切换每页条数
+      sizeChange: (val: number) => {
+        state.searchs.searchSize = val
+        state.search()
+      },
+      // 切换分页
+      currentChange: (val: number) => {
+        state.searchs.searchCurrent = val
+        state.search()
+      },
+      searchYbzs:async()=>{
+        const  res  = await searchYbzs()
+        state.ybtotal=res.data
+      },
+      searchYbstj:async()=>{
+        try {
+          const  res  = await searchYbstj()
+          let lrdwdata:any = [],ybtjsdata:any=[]
+          res.data.forEach((item:any) => {
+            lrdwdata.push(item.lrdw)
+            ybtjsdata.push(item.ybths)
+          });
+          ybstj.value.lrdw=lrdwdata
+          ybstj.value.ybths=ybtjsdata
+        } catch (error) {
+          console.log(error)
+        }
       },
       download: (val: object) => {
         console.log(val)
@@ -152,12 +204,6 @@ export default defineComponent({
         state.title = '样本详情'
         state.dialogShow = true
       },
-      sizeChange: (val: any) => {
-        console.log(val)
-      },
-      currentChange: (val: any) => {
-        console.log(val)
-      },
       //echarts
       bar: () => {
         let option = {}
@@ -170,17 +216,18 @@ export default defineComponent({
                 color: '#ccc'
               }
             },
-            data: [
-              '省厅',
-              '岳麓区分局',
-              '芙蓉区分局',
-              '望城区分区',
-              '天心区分局',
-              '雨花区分局',
-              '长沙县',
-              '宁乡市',
-              '浏阳市'
-            ]
+            // data: [
+            //   '省厅',
+            //   '岳麓区分局',
+            //   '芙蓉区分局',
+            //   '望城区分区',
+            //   '天心区分局',
+            //   '雨花区分局',
+            //   '长沙县',
+            //   '宁乡市',
+            //   '浏阳市'
+            // ]
+            data:ybstj.value.lrdw
           },
           yAxis: {
             type: 'value',
@@ -192,7 +239,8 @@ export default defineComponent({
           },
           series: [
             {
-              data: [120, 200, 150, 80, 70, 110, 130, 20, 50],
+              // data: [120, 200, 150, 80, 70, 110, 130, 20, 50],
+              data: ybstj.value.ybths,
               type: 'bar'
             }
           ]
@@ -202,8 +250,15 @@ export default defineComponent({
     })
     onMounted(() => {
       state.bar()
+      state.search()
+      state.searchYbzs()
+      state.searchYbstj()
     })
-    return state
+    return {
+      ...toRefs(state),
+      ybstj,
+      tableDatas
+    }
   },
   components: { Elsearch, Eltable }
 })

@@ -99,10 +99,10 @@ export default defineComponent({
       handleCustom: (row: any) => {
         emit('custom', row)
       },
-      handleSizeChange: (val: any) => {
+      handleSizeChange: (val: number) => {
         emit('sizeChange', val)
       },
-      handleCurrentChange: (val: any) => {
+      handleCurrentChange: (val: number) => {
         emit('currentChange', val)
       }
     })

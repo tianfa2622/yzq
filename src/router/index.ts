@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { clearPending } from '../utils/http';
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes: [
@@ -100,4 +101,11 @@ const router = createRouter({
     }
   ]
 })
+
+router.beforeEach((to, from, next)=>{
+  // 在跳转路由之前，先清除所有的请求
+  clearPending()
+  next()
+})
+
 export default router

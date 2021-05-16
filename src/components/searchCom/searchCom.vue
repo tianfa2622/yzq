@@ -1,10 +1,11 @@
 <template>
   <div class="searchCom">
-    <el-form ref="form" :model="formDatas" label-width="auto">
+    <el-form ref="form" :model="formDatas" :rules="rules" label-width="auto">
       <el-form-item
         v-for="(item, index) in searchSettings"
         :key="index"
         :label="item.label != '' ? item.label : ''"
+        :prop="item.value"
       >
         <el-input
           v-model="formDatas[item.value]"
@@ -44,6 +45,7 @@
           type="textarea"
           v-model="formDatas[item.value]"
           :placeholder="item.placeholder"
+          :disabled='item.disabled'
         ></el-input>
         <el-radio-group v-if="item.type === 'radio'" v-model="formDatas[item.value]">
           <el-radio :label="op.value" v-for="op in item.options" :key="op.value">{{
@@ -55,6 +57,7 @@
         <el-button v-if="item.type === 'download'" @click="download">{{
           item.placeholder
         }}</el-button>
+        <el-button v-if="item.type === 'reset'" @click="reset">{{ item.placeholder }}</el-button>
       </el-form-item>
     </el-form>
     <div class="btns" v-if="searchBtn">
@@ -63,15 +66,23 @@
         <el-button v-if="item.type === 'add'" @click="add">{{ item.name }}</el-button>
         <el-button v-if="item.type === 'download'" @click="download">{{ item.name }}</el-button>
         <el-button v-if="item.type === 'uploading'" @click="uploading">{{ item.name }}</el-button>
+        <el-button v-if="item.type === 'reset'" @click="reset">{{ item.name }}</el-button>
       </div>
     </div>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, reactive, toRefs } from 'vue'
+import { ElForm } from 'element-plus'
+import { defineComponent, reactive, toRefs, ref,onMounted } from 'vue'
 export default defineComponent({
   props: ['searchSettings', 'searchBtn'],
   setup(props, { emit }) {
+    const { searchSettings } = props
+    const rules: any = ref({})
+    searchSettings.forEach((item: any) => {
+      rules.value[item.value] = item.rule || []
+    })
+    const form = ref<InstanceType<typeof ElForm>>()
     const state = reactive({
       formDatas: {},
       add: () => {
@@ -85,10 +96,27 @@ export default defineComponent({
       },
       uploading: () => {
         emit('uploading', state.formDatas)
+      },
+      reset: () => {
+        if (form.value) {
+          form.value.resetFields()
+        }
+      },
+      validate: (cb?: Function) => {
+        if (form.value) {
+          form.value.validate((valid) => {
+            if (cb) {
+              console.log(rules.value)
+              cb(valid)
+            }
+          })
+        }
       }
     })
     return {
-      ...toRefs(state)
+      ...toRefs(state),
+      form,
+      rules
     }
   }
 })

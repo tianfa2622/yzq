@@ -6,13 +6,18 @@
     "build": "vuedx-typecheck . && vite build"
   },
   "dependencies": {
+    "@types/qs": "^6.9.6",
     "axios": "^0.21.1",
     "echarts": "^5.0.0",
     "element-plus": "^1.0.1-beta.22",
+    "nprogress": "^0.2.0",
+    "qs": "^6.10.1",
     "vue": "^3.0.5",
     "vue-router": "4.0.2"
   },
   "devDependencies": {
+    "@types/node": "^15.0.2",
+    "@types/nprogress": "^0.2.0",
     "@vitejs/plugin-vue": "^1.0.4",
     "@vue/compiler-sfc": "^3.0.5",
     "@vuedx/typecheck": "^0.4.1",
