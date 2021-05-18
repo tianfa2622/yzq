@@ -15,7 +15,7 @@
       <p> 确认删除该角色吗？ 删除前请检查该角色中已无用户，否则无法删除！</p>
       <template #footer>
         <span class="dialog-footer">
-          <el-button @click="delShow = false">确认</el-button>
+          <el-button @click="confirmDel">确认</el-button>
           <el-button @click="delShow = false">取消</el-button>
         </span>
       </template>
@@ -25,7 +25,15 @@
         <el-form-item label="角色名称">
           <el-input v-model="dialogShow.form"></el-input>
         </el-form-item>
-        <el-form-item label="设置权限"> </el-form-item>
+        <el-form-item label="设置权限">
+          <!-- <template> -->
+            <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
+            <div style="margin: 15px 0;"></div>
+            <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
+              <el-checkbox v-for="city in cities" :label="city" :key="city">{{city}}</el-checkbox>
+            </el-checkbox-group>
+          <!-- </template> -->
+        </el-form-item>
       </el-form>
       <template #footer>
         <span class="dialog-footer">
@@ -37,12 +45,21 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, reactive } from 'vue'
+import { defineComponent, reactive,ref,toRefs,nextTick,onMounted } from 'vue'
 import Elsearch from '/@/components/searchCom/searchCom.vue'
 import Eltable from '/@/components/tableCom/tableCom.vue'
+import { ElMessage } from 'element-plus';
+import { Rows } from '/@/types/system/role';
+import { searchAll,del} from '/@/api/system/role'
 export default defineComponent({
   setup() {
+    const tableDatas = ref<Rows>([])
+    const row = ref<{ id?: number }>({})
     const state = reactive({
+      checkAll: false,
+      checkedCities: ['上海', '北京'],
+      cities: ['上海', '北京', '广州', '深圳'],
+      isIndeterminate: true,
       title: '',
       dialogShow: false,
       delShow: false,
@@ -60,23 +77,63 @@ export default defineComponent({
         { placeholder: '新增', type: 'add' }
       ],
       tableHead: [
-        { label: '角色名称', prop: 'input' },
+        { label: '角色名称', prop: 'name' },
         { label: '账号数量', prop: 'input' }
       ],
-      tableDatas: Array(5).fill({
-        input: '123'
-      }),
+      // tableDatas: Array(5).fill({
+      //   input: '123'
+      // }),
       tableSettings: [
         { name: '修改', type: 'modify' },
         { name: '删除', type: 'delete' }
       ],
       dialogData: {},
+      
+      handleCheckAllChange(val:any) {
+        const cityOptions:any = ['上海', '北京', '广州', '深圳']
+        state.checkedCities = val ? cityOptions : [];
+        state.isIndeterminate = false;
+      },
+      handleCheckedCitiesChange(value:any) {
+        let checkedCount = value.length;
+        state.checkAll = checkedCount === state.cities.length;
+        state.isIndeterminate = checkedCount > 0 && checkedCount < state.cities.length;
+      },
       //search
       add: (val: object) => {
         console.log(val)
+        state.title = '添加角色'
+        state.dialogShow = true
       },
-      search: (val: object) => {
-        console.log(val)
+      // 搜索按钮 这里要一个参数
+      search: async (val?: object) => {
+        let size = state.searchs.searchSize
+        let current = state.searchs.searchCurrent
+        try{
+          const  res  = await searchAll({ ...val, size: size, current: current })
+          if (res.code === 1) {
+            tableDatas.value = res.data.records
+            state.searchs.searchTotal = res.data.total
+            if (val) {
+              ElMessage.success({
+                message: '查询成功',
+                type: 'success'
+              })
+            }
+          }
+        } catch(err){
+          console.log(err)
+        }
+      },
+      // 切换每页条数
+      sizeChange: (val: number) => {
+        state.searchs.searchSize = val
+        state.search()
+      },
+      // 切换分页
+      currentChange: (val: number) => {
+        state.searchs.searchCurrent = val
+        state.search()
       },
       //table
       modify: (val: object) => {
@@ -88,15 +145,33 @@ export default defineComponent({
         console.log(val)
         state.title = '删除确认'
         state.delShow = true
+        row.value = val
       },
-      sizeChange: (val: any) => {
-        console.log(val)
+      // 确认删除按钮
+      confirmDel: async () => {
+        if (row.value.id) {
+          const id = row.value.id
+          const  res  = await del(id)
+          console.log(row)
+          if (res.code === 1) {
+            ElMessage.success({
+              message: '删除成功',
+              type: 'success'
+            })
+            state.delShow = false
+            state.search()
+          }
+        }
       },
-      currentChange: (val: any) => {
-        console.log(val)
-      }
     })
-    return state
+    onMounted(() => {
+      state.search()
+    })
+    return {
+      ...toRefs(state),
+      tableDatas,
+      row
+    }
   },
   components: { Elsearch, Eltable }
 })

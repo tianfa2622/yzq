@@ -55,6 +55,15 @@
         </template>
       </ul>
     </el-dialog>
+    <el-dialog title="删除" v-model="delShow" center>
+      <p>确认要删除选中内容吗？删除后数据不可恢复哦！！</p>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="confirmDel">确认</el-button>
+          <el-button @click="delShow = false">取消</el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 <script lang="ts">
@@ -68,11 +77,13 @@ import { Rows } from '../../types/sample';
 export default defineComponent({
   setup() {
     const tableDatas = ref<Rows>([])
+    const row = ref<{ id?: number }>({})
     const ybstj = ref<{lrdw?:any,ybths?:any}>({})
     const state = reactive({
       title: '',
       ybtotal: 0,
       dialogShow: false,
+      delShow:false,
       searchs: {
         searchCurrent: 1,
         searchSize: 5,
@@ -195,6 +206,25 @@ export default defineComponent({
       //table
       del: (val: object) => {
         console.log(val)
+        state.title = '删除'
+        state.delShow = true
+        row.value = val
+      },
+      // 确认删除按钮
+      confirmDel: async () => {
+        if (row.value.id) {
+          const id = row.value.id
+          const  res  = await del(id)
+          console.log(row)
+          if (res.code === 1) {
+            ElMessage.success({
+              message: '删除成功',
+              type: 'success'
+            })
+            state.delShow = false
+            state.search()
+          }
+        }
       },
       modify: (val: object) => {
         console.log(val)

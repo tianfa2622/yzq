@@ -64,8 +64,8 @@
       </div>
       <div class="sb">
         <h3>识别结果</h3>
-        <p>样本相似度：80%</p>
-        <p>结果分析：</p>
+        <p>样本相似度：{{detailedData.sbjgYbxsd}}</p>
+        <p>结果分析：{{detailedData.sbjgJgfx}}</p>
       </div>
       <template #footer>
         <span class="dialog-footer">
@@ -76,10 +76,15 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, reactive } from 'vue'
+import { defineComponent,onMounted, reactive,ref,toRefs,nextTick } from 'vue'
 import Eltable from '/@/components/tableCom/tableCom.vue'
+import { ElMessage } from 'element-plus';
+import { searchAll,insert,searchOne} from '/@/api/photo/index'
+import { Rows } from '../../types/photo';
 export default defineComponent({
   setup() {
+    const tableDatas = ref<Rows>([])
+    const detailedData = ref<any>({})
     const state = reactive({
       dialogShow: false,
       fileList: [],
@@ -89,25 +94,66 @@ export default defineComponent({
         searchTotal: 999
       },
       tableHead: [
-        { label: '图片名称', prop: 'input' },
-        { label: '识别时间', prop: 'input' },
-        { label: '识别结果', prop: 'input' },
-        { label: '识别设备', prop: 'input' }
+        { label: '图片名称', prop: 'tpmc' },
+        { label: '识别时间', prop: 'sbsj' },
+        { label: '识别结果', prop: 'sbjgJgfx' },
+        { label: '识别设备', prop: 'sbsb' }
       ],
-      tableDatas: Array(5).fill({
-        input: '123'
-      }),
       tableSettings: [{ name: '对比详情', type: 'custom' }],
       //table
-      custom: (val: object) => {
-        console.log(val)
-        state.dialogShow = true
+      // 搜索按钮 这里要一个参数
+      search: async () => {
+        let size = state.searchs.searchSize
+        let current = state.searchs.searchCurrent
+        try{
+          const  res  = await searchAll({ size: size, current: current })
+          if (res.code === 1) {
+            tableDatas.value = res.data.records
+            state.searchs.searchTotal = res.data.total
+            // if (val) {
+            //   ElMessage.success({
+            //     message: '查询成功',
+            //     type: 'success'
+            //   })
+            // }
+          }
+        } catch(err){
+          console.log(err)
+        }
       },
-      sizeChange: (val: any) => {
-        console.log(val)
+      // 切换每页条数
+      sizeChange: (val: number) => {
+        state.searchs.searchSize = val
+        state.search()
       },
-      currentChange: (val: any) => {
-        console.log(val)
+      // 切换分页
+      currentChange: (val: number) => {
+        state.searchs.searchCurrent = val
+        state.search()
+      },
+      custom: async (val: any) => {
+        detailedData.value = await state.searchOne(val.id)
+        if (detailedData.value) {
+          const data = detailedData.value
+          state.dialogShow = true
+          // nextTick(()=>{
+          //   if (detailsText.value) {
+          //     detailsText.value.formDatas = { ajclgc: data.ajclgc}
+          //   }
+          // })
+        }
+      },
+      // 根据ID查询
+      searchOne: async (id:number)=>{
+        try {
+          const res = await searchOne(id)
+          if (res.code === 1) {
+            const data =res.data
+            return data
+          }
+        } catch (error) {
+          console.log(error) 
+        }
       },
       handleRemove: (file: any, fileList: any) => {
         console.log(file, fileList)
@@ -122,7 +168,14 @@ export default defineComponent({
         console.log(file, fileList)
       }
     })
-    return state
+    onMounted(()=>{
+      state.search()
+    })
+    return {
+      ...toRefs(state),
+      tableDatas,
+      detailedData
+    }
   },
   components: { Eltable }
 })

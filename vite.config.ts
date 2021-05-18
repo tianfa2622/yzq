@@ -11,8 +11,9 @@ export default defineConfig({
       '/api': {
         //开发环境所需
         // target: 'http://192.168.1.9:8085/',
-        // target: 'http://192.168.1.3:8085/',
-        target: 'http://pm2.winvers.com/yzq',
+        // target: 'http://192.168.1.25:8085/',
+        target: 'http://192.168.1.2:8085/',
+        // target: 'http://pm2.winvers.com/yzq',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')
       },

@@ -8,6 +8,7 @@
   "dependencies": {
     "@types/qs": "^6.9.6",
     "axios": "^0.21.1",
+    "dayjs": "^1.10.4",
     "echarts": "^5.0.0",
     "element-plus": "^1.0.1-beta.22",
     "nprogress": "^0.2.0",

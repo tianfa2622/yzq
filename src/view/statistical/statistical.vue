@@ -7,7 +7,7 @@
         <div class="line">
           <h3>每日过检包裹统计</h3>
           <div id="statisticalLine"></div>
-          <p>包裹总数：<span>884件</span></p>
+          <p>包裹总数：<span>{{bgsl}}件</span></p>
         </div>
       </div>
       <img src="/src/assets/statistical/u196.png" alt="" />
@@ -18,7 +18,7 @@
         <div class="bar">
           <h3>报警类型统计</h3>
           <div id="statisticalBar"></div>
-          <p>报警总数：<span>88</span></p>
+          <p>报警总数：<span>{{bjzs}}</span></p>
         </div>
       </div>
     </main>
@@ -33,12 +33,21 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, reactive, onMounted } from 'vue'
+import { defineComponent, reactive, onMounted,ref ,toRefs} from 'vue'
 import * as echarts from 'echarts'
+import dayjs from 'dayjs'
 import Elsearch from '/@/components/searchCom/searchCom.vue'
 import Eltable from '/@/components/tableCom/tableCom.vue'
+import { exportAll ,selectBgtj,selectBjlbSum} from '/@/api/statistical/index'
+import { ElMessage } from 'element-plus'
+import { Rows } from '../../types/statistical';
 export default defineComponent({
   setup() {
+    const tableDatas = ref<Rows>([])
+    const datetime = ref<any>({})
+    const bgsl = ref<any>(null)
+    const bjzs = ref<any>(null)
+    const barData = ref<any>({})
     const state = reactive({
       title: '',
       dialogShow: false,
@@ -53,17 +62,15 @@ export default defineComponent({
         { placeholder: '搜索', type: 'search' }
       ],
       tableHead: [
-        { label: '时间', prop: 'input' },
-        { label: '包裹数', prop: 'input' },
-        { label: '报警数', prop: 'input' },
-        { label: '制式手枪数量', prop: 'input' },
-        { label: '非制式手枪数量', prop: 'input' },
-        { label: '制式步枪数量', prop: 'input' },
-        { label: '非制式步枪数量', prop: 'input' }
+        { label: '时间', prop: 'tjsj' },
+        { label: '包裹数', prop: 'bgsl' },
+        { label: '报警数', prop: 'bjsl' },
+        { label: '制式手枪数量', prop: 'zssqsl' },
+        { label: '非制式手枪数量', prop: 'fzssqsl' },
+        { label: '制式步枪数量', prop: 'zsbqsl' },
+        { label: '非制式步枪数量', prop: 'fzsbqsl' }
       ],
-      tableDatas: Array(5).fill({
-        input: '123'
-      }),
+      tableDatas: [],
       tableSettings: [
         { name: '修改', type: 'modify' },
         { name: '删除', type: 'delete' }
@@ -89,9 +96,79 @@ export default defineComponent({
         },
         { placeholder: '请输入枪支名称', label: '枪支名称', type: 'input', value: 'yhmc' }
       ],
+      // 处理时间格式
+      formatMethod:(value:any)=>{
+        let date:any = new Date(value)
+        let y = date.getFullYear()
+        let m = date.getMonth() + 1
+        m = m < 10 ? ('0' + m) : m
+        let d = date.getDate()
+        d = d < 10 ? ('0' + d) : d
+        const time =  y + '-' + m + '-' + d;
+        return time
+      },
       //search
-      search: (val: object) => {
-        console.log(val)
+       // 搜索按钮 这里要一个参数
+      search: async (val?: any) => {
+        if (val.yhmc) {
+          console.log(val)
+          datetime.value.kssj=state.formatMethod(val.yhmc[0])
+          datetime.value.jssj=state.formatMethod(val.yhmc[1])
+          state.selectBgtj(datetime)
+        }else{
+          state.selectBgtj()
+        }
+      },
+      selectBgtj:async(data?:any)=>{
+        let size = state.searchs.searchSize
+        let current = state.searchs.searchCurrent
+        const  res  = await selectBgtj({ ...data, size: size, current: current })
+        if (res.code == 1) {
+          tableDatas.value = res.data.records
+          let sum:number = 0
+          res.data.records.forEach((item)=>{
+            // 但是这里我好想又不用
+            sum += Number(item.bgsl)
+          })
+          // 你这个sum干嘛用的
+          // data: {records:[],total:0}
+          state.searchs.searchTotal = res.data.total
+          if (data) {
+            ElMessage.success({
+              message: '查询成功',
+              type: 'success'
+            })
+          }
+        } else {
+          // state.tableDatas = res.data.records
+          // state.searchs.searchTotal = res.data.total
+          ElMessage.error({
+            message: '查询失败!',
+            type: 'error'
+          })
+        }
+      },
+      selectBjlbSum:async()=>{
+        const  res  = await selectBjlbSum()
+        if (res.code == 1) {
+          bgsl.value = res.data[0].bgsl
+          bjzs.value = res.data[0].bjsl
+          barData.value = res.data[0]
+          // data: {records:[],total:0}
+          // if (data) {
+          //   ElMessage.success({
+          //     message: '查询成功',
+          //     type: 'success'
+          //   })
+          // }
+        } else {
+          // state.tableDatas = res.data.records
+          // state.searchs.searchTotal = res.data.total
+          ElMessage.error({
+            message: '查询失败!',
+            type: 'error'
+          })
+        }
       },
       detailed: () => {
         state.title = '导出数据预览列表'
@@ -134,6 +211,7 @@ export default defineComponent({
       },
       bar: () => {
         let option = {}
+        const data = barData.value
         const Chart = echarts.init(document.getElementById('statisticalBar') as HTMLCanvasElement)
         option = {
           tooltip: {
@@ -158,10 +236,10 @@ export default defineComponent({
                 formatter: '{c}'
               },
               data: [
-                { value: 1048, name: '制式手枪' },
-                { value: 735, name: '非制式手枪' },
-                { value: 580, name: '制式步枪' },
-                { value: 484, name: '非制式步枪' }
+                { value: data.zssqsl, name: '制式手枪' },
+                { value: data.fzssqsl, name: '非制式手枪' },
+                { value: data.zsbqsl, name: '制式步枪' },
+                { value: data.fzsbqsl, name: '非制式步枪' }
               ]
             }
           ]
@@ -172,8 +250,16 @@ export default defineComponent({
     onMounted(() => {
       state.line()
       state.bar()
+      state.selectBgtj()
+      state.selectBjlbSum()
     })
-    return state
+    return {
+      ...toRefs(state),
+      tableDatas,
+      bgsl,
+      datetime,
+      bjzs
+    }
   },
   components: { Elsearch, Eltable }
 })

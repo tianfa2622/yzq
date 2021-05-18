@@ -23,6 +23,7 @@
         :prop="item.prop"
         :label="item.label"
         v-for="(item, index) in tableHead"
+        :formatter='item.formatter'
         :key="index"
       >
       </el-table-column>

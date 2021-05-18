@@ -3,7 +3,7 @@
     <div class="homeTitle">
       <div class="titleUser">
         <span class="user">下午好！157***6999</span>
-        <el-button type="text">退出登录</el-button>
+        <el-button type="text" @click="logout">退出登录</el-button>
       </div>
       <h2>易制枪物品图形比对系统</h2>
       <ul>
@@ -18,8 +18,10 @@
   </div>
 </template>
 <script lang="ts">
+import {ElMessage} from 'element-plus'
 import { defineComponent, reactive } from 'vue'
 import { useRouter } from 'vue-router'
+import { logout } from '/@/api/system/login'
 export default defineComponent({
   setup() {
     const router = useRouter()
@@ -37,6 +39,12 @@ export default defineComponent({
       ],
       goRouter: (path: string) => {
         router.push(path)
+      },
+      logout: async () => {
+        await logout()
+        localStorage.clear()
+        ElMessage.success('退出成功')
+        router.push('/login')
       }
     })
     return state

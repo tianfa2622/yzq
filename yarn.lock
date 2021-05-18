@@ -665,6 +665,11 @@ dayjs@1.x:
   resolved "https://registry.npm.taobao.org/dayjs/download/dayjs-1.10.2.tgz?cache=0&sync_timestamp=1609889123265&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fdayjs%2Fdownload%2Fdayjs-1.10.2.tgz#8f3a424ceb944a8193506804b0045a773d2d0672"
   integrity sha1-jzpCTOuUSoGTUGgEsARadz0tBnI=
 
+dayjs@^1.10.4:
+  version "1.10.4"
+  resolved "https://registry.npm.taobao.org/dayjs/download/dayjs-1.10.4.tgz?cache=0&sync_timestamp=1611310021152&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fdayjs%2Fdownload%2Fdayjs-1.10.4.tgz#8e544a9b8683f61783f570980a8a80eaf54ab1e2"
+  integrity sha1-jlRKm4aD9heD9XCYCoqA6vVKseI=
+
 de-indent@^1.0.2:
   version "1.0.2"
   resolved "https://registry.npm.taobao.org/de-indent/download/de-indent-1.0.2.tgz#b2038e846dc33baa5796128d0804b455b8c1e21d"

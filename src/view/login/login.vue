@@ -22,13 +22,16 @@
 <script lang="ts">
 import { defineComponent, reactive } from 'vue'
 import { useRouter } from 'vue-router'
+import { login } from '/@/api/system/login'
 export default defineComponent({
   setup() {
     const router = useRouter()
     const state = reactive({
       name: '',
       pwd: '',
-      submit: () => {
+      submit: async () => {
+        const res = await login({username: state.name, password: state.pwd})
+        localStorage.setItem('token',res.data.token)
         router.push('/homePage')
       }
     })

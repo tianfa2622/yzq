@@ -150,7 +150,7 @@ export default defineComponent({
       ],
       dialogSearch: [
         [
-          { placeholder: '请输入', label: '事件标识：', type: 'input', value: 'sjbs' },
+          { placeholder: '请输入', label: '事件标识：', type: 'input', value: 'sjbs', disabled: false },
           { placeholder: '请输入', label: '设备标识：', type: 'input', value: 'sbbs' },
           { placeholder: '请输入', label: '设备通道号：', type: 'input', value: 'sbtdh' },
           { placeholder: '请输入', label: '报警时间：', type: 'input', value: 'bjsjRqsj' },
@@ -391,6 +391,7 @@ export default defineComponent({
       custom: async (val: any) => {
         // console.log(val)
         state.resultsTitle = '反馈结果'
+        state.dialogSearch[1][0].disabled = false
         const data =await state.searchOne(val.id)
         console.log(data)
         if (data) {

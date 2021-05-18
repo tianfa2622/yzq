@@ -1,7 +1,7 @@
 // 搜索类型
 export interface searchData {
-  size: number
-  current: number
+  size?: number
+  current?: number
   kssj?: string
   jssj?: string
 }
@@ -9,17 +9,13 @@ export interface searchData {
 // 返回数据类型
 export interface Row {
   id?: number
-  qzmc?: string
-  qzlx?: string | number
-  xgybtp?: string
-  kjgybtp?: string
-  yblx?: string | number
-  lrly?: string
-  lrdw?: string | number
-  lrsj?: string
-  del?: boolean
-  ybtjs?: any | null
-  sums?: any | null
+  tjsj?: string
+  bgsl?: string | number
+  bjsl?: string | number
+  zssqsl?: string | number
+  fzssqsl?: string | number
+  zsbqsl?: string | number
+  fzsbqsl?: string | number
 }
 
 export interface Pictures {

@@ -174,7 +174,7 @@ axios.interceptors.request.use(
     // 获取token,并将其添加到请求头中
     let token = localStorage.getItem('token')
     if (token) {
-      config.headers.Authorization = `${token}`
+      config.headers.Authorization = `Bearer ${token}`
     }
     return config
   },
@@ -205,6 +205,10 @@ axios.interceptors.response.use(
       } else {
         response.data.message = msg
       }
+      ElMessage({
+        message: response.data.message || '未知错误！',
+        type: 'error'
+      })
     }
     if (response.data.code === 0) {
       ElMessage({
